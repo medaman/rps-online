@@ -1,0 +1,43 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color:#e8dfff;
+  overflow: hidden;
+}
+
+#start-screen {
+  background-color: salmon;
+  padding-bottom:4vh;
+  height:100vh;
+  position: absolute;
+  left: 0%;
+  padding:0 10%;
+  z-index:100;
+  width:100%;
+}
+
+.avatar {
+  width:100%;
+  cursor: pointer;
+}
+
+.row {
+  border:1px solid black;
+}
+
+#chat-area {
+  height:30vh;
+  overflow: auto;
+}
+
+#chat-text {
+  width:90%;
+  background-color:transparent;
+}
+
+#submit-chat {
+  width:10%;
+  float:right;
+}

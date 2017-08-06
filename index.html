@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat Rooms</title>
+
+  <!-- Bootstrap File -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Carter+One" rel="stylesheet">
+
+  <!-- CSS files -->
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+  <!-- Firebase Reference -->
+  <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
+
+</head>
+
+<body>
+  <div id="start-screen" class="container">
+    <h1>Enter your Name</h1>
+    <input id="char-name" autofocus autocomplete="off">
+    <h1>Select Avatar</h1>
+    <div id="avatar-options">
+    </div>
+    <div id="start-comment"></div>
+  </div>
+
+  <div id="game-area" class="container">
+    <div class="row">
+      <div class="col-xs-6">Rock Papers Scissors - Online</div>
+      <div class="col-xs-6">
+        <button>Restart</button>
+        <button>Help</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="row">
+          <div id="left-name"></div>
+        </div>
+        <div class="row">
+          <div id="left-avatar" class="col-xs-6"><button class="side" value="left">Sit Here</button></div>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="row">
+          <div id="right-name"></div>
+        </div>
+        <div class="row">
+          <div id="right-avatar" class="col-xs-6"><button class="side" value="right">Sit Here</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="row">Chat</div>
+        <div class="row">
+          <div class="col-xs-10" id="chat-area"></div>
+          <div class="col-xs-2" id="people-in-room"></div>
+        </div>
+        <div id="chat-typing" class="row">
+          <form>
+            <input type="text" id="chat-text"  autocomplete="off">
+            <input type="submit" name="Submit" id="submit-chat">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <!-- Javascript files -->
+  <script src="assets/javascript/javascript.js"></script>  
+
+</body>
+</html>
