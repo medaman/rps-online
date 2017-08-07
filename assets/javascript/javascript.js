@@ -11,13 +11,31 @@ firebase.initializeApp(config);
 
 $(document).ready(function() {
 
+/**
+   _____                            _____        _    _    _                    
+  / ____|                          / ____|      | |  | |  (_)                   
+ | |  __   __ _  _ __ ___    ___  | (___    ___ | |_ | |_  _  _ __    __ _  ___ 
+ | | |_ | / _` || '_ ` _ \  / _ \  \___ \  / _ \| __|| __|| || '_ \  / _` |/ __|
+ | |__| || (_| || | | | | ||  __/  ____) ||  __/| |_ | |_ | || | | || (_| |\__ \
+  \_____| \__,_||_| |_| |_| \___| |_____/  \___| \__| \__||_||_| |_| \__, ||___/
+                                                                      __/ |     
+                                                                     |___/      
+**/
+
   var numAvatars = 6;
-  var charName;
-  var myAvatar;
+  var charName = "";
+  var oppName = "";
+  var myAvatar = "";
   var mySide = "none";
+  var oppSide = "";
+  var game = ["rock", "paper", "scissors"];
 
   var latestChat = [];
-  var numGames = 0;
+  var myWins = 0;
+  var myLosses = 0;
+  var clickSide = "";
+  var clickAction = "";
+  var oppAction = false;
   
   var database = firebase.database();
 
@@ -41,14 +59,25 @@ $(document).ready(function() {
       $("#start-comment").html("<h1>Please enter name</h1>")
     }
     $("#chat-area").empty();
+    $("#current-player").text(charName);
   });
 
-  $(document).on("click", ".side", function() {
-    mySide = $(this).attr("value");
-    placeAvatar(myAvatar, mySide);
-    database.ref(mySide).set([true, charName, myAvatar]);
-    database.ref(mySide).onDisconnect().set([false])
-
+  $(document).on("click", ".sit-down", function() {
+    console.log(mySide);
+    if(mySide === "none") {
+      mySide = $(this).attr("value");
+      if (mySide === "left") {oppSide="right";} else if (mySide === "right") {oppSide="left";}
+      placeAvatar(myAvatar, mySide);
+      updateFirebase(mySide);
+      database.ref(mySide).onDisconnect().set({
+        sitting: false,
+        name: "",
+        wins: 0,
+        losses: 0,
+        avatar: "",
+        action: ""
+      });
+    }
   });
 
   database.ref("left").on("value", function(snapshot) {
@@ -60,49 +89,179 @@ $(document).ready(function() {
   }); 
 
   function checkPlayer(side, ss) {
-    if(ss.val()[1] != charName) {
-      if (ss.val()[0]) {
-      var newImg = $("<img>");
-      newImg.attr("src", "assets/images/avatar" + ss.val()[2] + ".jpg");
-      $("#" + side + "-avatar").html(newImg);
-      $("#" + side + "-name").text(ss.val()[1]);
+    if(ss.val().name != charName) {
+      if (ss.val().sitting) {
+        var newImg = $("<img>");
+        newImg.addClass("avatar-image");
+        newImg.attr("src", "assets/images/avatar" + ss.val().avatar + ".jpg");
+        $("#avatar-side-" + side).html(newImg);
+        oppName = ss.val().name;
+        $("#" + side + "-name").text(oppName);
+        $("#button-place-" + side).html("");
+        $("#scoreboard-" + side).text("Wins: " + ss.val().wins + " || Losses: " + ss.val().losses)
+        oppAction = ss.val().action;
+        if(oppAction!=null) {checkWin(oppAction);}
       } else {
-        console.log("HWAT? ")
         var newButton = $("<button>");
-        newButton.addClass("side");
+        newButton.addClass("sit-down btn btn-default");
         newButton.attr("value", side);
         newButton.text("Sit Here");
-        $("#" + side + "-avatar").html("");
+        $("#avatar-side-" + side).html("");
         $("#" + side + "-name").text("");
-        $("#" + side + "-name").append(newButton);
+        $("#scoreboard-" + side).text("");
+        $("#button-place-" + side).html(newButton);
+        oppName = "";
       }
     }
   }
 
+  function checkWin() {
+    if (clickAction!="" && oppAction) {
+      var newImg = $("<img>");
+      newImg.attr("src", "assets/images/" + oppAction + ".jpg");
+      newImg.addClass("action-image");
+      var newDiv = $("<div>");
+      newDiv.addClass("result-text");
+      $("#button-side-" + oppSide).html(newImg);
+      if (clickAction === oppAction) {
+        newDiv.text("That is a tie");
+      } else if (clickAction === "rock") {
+        if (oppAction === "scissors") {
+          newDiv.text("You win! " + clickAction + " beats " + oppAction);
+          myWins++;
+        } else {
+          newDiv.text("You lose! " + oppAction + " beats " + clickAction);
+          myLosses++;
+        }
+      } else if (clickAction === "paper") {
+        if (oppAction === "rock") {
+          newDiv.text("You win! " + clickAction + " beats " + oppAction);
+          myWins++;
+        } else {
+          newDiv.text("You lose! " + oppAction + " beats " + clickAction);
+          myLosses++;
+        }       
+      } else {
+        if (oppAction === "paper") {
+          newDiv.text("You win! " + clickAction + " beats " + oppAction);
+          myWins++;
+        } else {
+          myLosses++;
+          newDiv.text("You lose! " + oppAction + " beats " + clickAction);
+        }
+      }
+      $("#chat-area").append(newDiv)
+      $("#chat-area").scrollTop($("#chat-area")[0].scrollHeight);
+      $("#scoreboard-" + mySide).text("Wins: " + myWins + " || Losses: " + myLosses)
+      updateFirebase(mySide);
+      resetGame();
+
+    }
+  }
+
+  function resetGame() {
+    clickAction = "";
+    setTimeout(function() {
+      oppAction = false;
+      var newButtons = $("<div>")
+      formatButton(newButtons, "rock", mySide);
+      formatButton(newButtons, "paper", mySide);
+      formatButton(newButtons, "scissors", mySide);
+      $("#button-side-" + mySide).html(newButtons);
+      $("#button-side-" + oppSide).text("Waiting for move");
+      updateFirebase(mySide);
+    }, 1500);
+  }
+
+
   $(document).on("click", ".get-up", function() {
     var area = $(this).attr("value")
-    database.ref(area).set([false,"xxxxxx"]);
+    database.ref(area).set({
+      sitting: false,
+      name: "xxxxxxxxxxxxxxx",
+      wins: 0,
+      losses: 0,
+      avatar: "",
+      action: ""
+    });
     var newButton = $("<button>");
-    newButton.addClass("side");
+    newButton.addClass("sit-down btn btn-default");
     newButton.attr("value", area);
     newButton.text("Sit Here");
-    $("#" + area + "-avatar").html("");
+    $("#avatar-side-" + area).html("");
+    $("#button-side-" + area).html("");
     $("#" + area + "-name").text("");
-    $("#" + area + "-name").append(newButton);
+    $("#button-place-" + area).html(newButton);
     mySide = "none";
+    myWins = 0;
+    myLosses = 0;
   });
 
   function placeAvatar(avatarNumber, area) {
+    var avatarSide = $("<div>")
+    var buttonSide = $("<div>")
     var newButton = $("<button>");
     newButton.text("Get Up");
     newButton.attr("value", area)
-    newButton.addClass("get-up");
+    newButton.addClass("get-up btn btn-default");
     var newImg = $("<img>");
+    newImg.addClass("avatar-image");
     newImg.attr("src", "assets/images/avatar" + avatarNumber + ".jpg");
-    $("#" + area + "-avatar").html(newImg);
+    avatarSide.html(newImg)
+    $("#avatar-side-" + area).html(avatarSide);
     $("#" + area + "-name").text($("#char-name").val().trim());
-    $("#" + area + "-name").append(newButton);
+    $("#button-place-" + area).html(newButton);
+
+    formatButton(buttonSide, "rock", area);
+    formatButton(buttonSide, "paper", area);
+    formatButton(buttonSide, "scissors", area);
+    $("#button-side-" + area).html(buttonSide);
   }
+
+  function formatButton(buttonArea, action, side) {
+    var newButton = $("<button>")
+    newButton.addClass("btn btn-default move")
+    newButton.attr("value", action)
+    newButton.attr("side", side)
+    newButton.text(action);    
+    buttonArea.append(newButton);
+  }
+
+  $(document).on("click", ".move", function() {
+    if (clickAction === "") {
+      clickSide = $(this).attr("side");
+      clickAction = $(this).attr("value");
+      var newImg = $("<img>")
+      newImg.addClass("action-image")
+      newImg.attr("src", "assets/images/" + clickAction + ".jpg");
+      console.log("assets/images/" + clickAction + ".jpg");
+      $("#button-side-" + clickSide).append(newImg);
+      updateFirebase(clickSide);
+      checkWin();
+    }
+  })
+
+  function updateFirebase(side) {
+    database.ref(side).set({
+      sitting: true,
+      name: charName,
+      wins: myWins,
+      losses: myLosses,
+      avatar: myAvatar,
+      action: clickAction
+    });
+  }
+
+/**
+   _____  _             _      _____        _    _    _                    
+  / ____|| |           | |    / ____|      | |  | |  (_)                   
+ | |     | |__    __ _ | |_  | (___    ___ | |_ | |_  _  _ __    __ _  ___ 
+ | |     | '_ \  / _` || __|  \___ \  / _ \| __|| __|| || '_ \  / _` |/ __|
+ | |____ | | | || (_| || |_   ____) ||  __/| |_ | |_ | || | | || (_| |\__ \
+  \_____||_| |_| \__,_| \__| |_____/  \___| \__| \__||_||_| |_| \__, ||___/
+                                                                 __/ |     
+                                                                |___/ 
+**/
 
   database.ref("chat").on("value", function(snapshot) {
       latestChat = snapshot.val().latestChat;

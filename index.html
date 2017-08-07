@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Chat Rooms</title>
+  <title>Rock Paper Scissors - Online</title>
 
   <!-- Bootstrap File -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -27,38 +27,46 @@
     <div id="start-comment"></div>
   </div>
 
-  <div id="game-area" class="container">
+  <div id="game-area" class="container-fluid">
     <div class="row">
-      <div class="col-xs-6">Rock Papers Scissors - Online</div>
-      <div class="col-xs-6">
-        <button>Restart</button>
-        <button>Help</button>
+      <div class="col-xs-7 top-row">Rock Papers Scissors - Online</div>
+      <div class="col-xs-5 top-row">
+        <p id = "current-player"></p>
       </div>
     </div>
     <div class="row">
       <div class="col-xs-6">
         <div class="row">
-          <div id="left-name"></div>
+          <div class="col-xs-1" id="button-place-left"><button class="sit-down btn btn-default" value="left">Sit Here</button></div>
+          <div class="col-xs-6" id="left-name"></div>
+          <div class="col-xs-3" id="scoreboard-left">Wins: 0 || Losses: 0</div>
         </div>
         <div class="row">
-          <div id="left-avatar" class="col-xs-6"><button class="side" value="left">Sit Here</button></div>
+          <div>
+            <div id="avatar-side-left" class="col-xs-7"></div>
+            <div id="button-side-left" class="col-xs-5"></div>
+          </div>
         </div>
       </div>
       <div class="col-xs-6">
         <div class="row">
-          <div id="right-name"></div>
+          <div class="col-xs-3" id="scoreboard-right">Wins: 0 || Losses: 0</div>
+          <div class="col-xs-6" id="right-name"></div>
+          <div class="col-xs-1" id="button-place-right"><button class="sit-down btn btn-default" value="right">Sit Here</button></div>
         </div>
         <div class="row">
-          <div id="right-avatar" class="col-xs-6"><button class="side" value="right">Sit Here</button></div>
+          <div>
+            <div id="avatar-side-right" class="col-xs-7"></div>
+            <div id="button-side-right" class="col-xs-5"></div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row" id="bottom-chat">
       <div class="col-xs-12">
         <div class="row">Chat</div>
         <div class="row">
-          <div class="col-xs-10" id="chat-area"></div>
-          <div class="col-xs-2" id="people-in-room"></div>
+          <div id="chat-area"></div>
         </div>
         <div id="chat-typing" class="row">
           <form>

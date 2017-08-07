@@ -18,21 +18,89 @@ body {
   width:100%;
 }
 
+#left-name, #right-name {
+  font-size: 2em;
+  margin:1vh 5%;
+  max-width:60%;
+  overflow: hidden;
+}
+
+.top-row {
+  font-size: 1.5em;
+} 
+
 .avatar {
   width:100%;
   cursor: pointer;
 }
 
+.get-up, .sit-down {
+  margin: 0 5%;
+}
+
+#avatar-side-right {
+  float:right;
+}
+
+#avatar-side-left {
+  float:left;
+}
+
 .row {
   border:1px solid black;
+  background-color: #e8dfff;
+}
+
+.avatar-image {
+  width:100%;
+}
+
+.action-image {
+  display:block;
+  width:40%;
+  margin: auto;
+}
+
+.result-text {
+  font-style: italic;
+  color:salmon;
+}
+
+.move {
+  display:block;
+  margin:1.5vh auto;
+  width:100%;
 }
 
 #chat-area {
-  height:30vh;
+  height:20vh;
   overflow: auto;
+  padding-left:.5%;
+}
+
+#scoreboard-left, #scoreboard-right {
+  font-size: 1.25em;
+}
+
+#scoreboard-left {
+  float:right;
+}
+
+#scoreboard-right {
+  float:left;
+}
+
+#bottom-chat {
+  width:100%;
+  position: fixed;
+  bottom: 0;
+  left:0;
+  margin:0;
+  z-index: 20;
 }
 
 #chat-text {
+  padding-left:.5%;
   width:90%;
   background-color:transparent;
 }
