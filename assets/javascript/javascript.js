@@ -63,7 +63,6 @@ $(document).ready(function() {
   });
 
   $(document).on("click", ".sit-down", function() {
-    console.log(mySide);
     if(mySide === "none") {
       mySide = $(this).attr("value");
       if (mySide === "left") {oppSide="right";} else if (mySide === "right") {oppSide="left";}
@@ -152,7 +151,6 @@ $(document).ready(function() {
       var newImg = $("<img>")
       newImg.addClass("action-image")
       newImg.attr("src", "assets/images/" + clickAction + ".jpg");
-      console.log("assets/images/" + clickAction + ".jpg");
       $("#button-side-" + clickSide).append(newImg);
       updateFirebase(clickSide);
       checkWin();
