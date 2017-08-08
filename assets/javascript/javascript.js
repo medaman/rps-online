@@ -115,88 +115,6 @@ $(document).ready(function() {
     }
   }
 
-  function checkWin() {
-    if (clickAction!="" && oppAction) {
-      var newImg = $("<img>");
-      newImg.attr("src", "assets/images/" + oppAction + ".jpg");
-      newImg.addClass("action-image");
-      var newDiv = $("<div>");
-      newDiv.addClass("result-text");
-      $("#button-side-" + oppSide).html(newImg);
-      if (clickAction === oppAction) {
-        newDiv.text("That is a tie");
-      } else if (clickAction === "rock") {
-        if (oppAction === "scissors") {
-          newDiv.text("You win! " + clickAction + " beats " + oppAction);
-          myWins++;
-        } else {
-          newDiv.text("You lose! " + oppAction + " beats " + clickAction);
-          myLosses++;
-        }
-      } else if (clickAction === "paper") {
-        if (oppAction === "rock") {
-          newDiv.text("You win! " + clickAction + " beats " + oppAction);
-          myWins++;
-        } else {
-          newDiv.text("You lose! " + oppAction + " beats " + clickAction);
-          myLosses++;
-        }       
-      } else {
-        if (oppAction === "paper") {
-          newDiv.text("You win! " + clickAction + " beats " + oppAction);
-          myWins++;
-        } else {
-          myLosses++;
-          newDiv.text("You lose! " + oppAction + " beats " + clickAction);
-        }
-      }
-      $("#chat-area").append(newDiv)
-      $("#chat-area").scrollTop($("#chat-area")[0].scrollHeight);
-      $("#scoreboard-" + mySide).text("Wins: " + myWins + " || Losses: " + myLosses)
-      updateFirebase(mySide);
-      resetGame();
-
-    }
-  }
-
-  function resetGame() {
-    clickAction = "";
-    setTimeout(function() {
-      oppAction = false;
-      var newButtons = $("<div>")
-      formatButton(newButtons, "rock", mySide);
-      formatButton(newButtons, "paper", mySide);
-      formatButton(newButtons, "scissors", mySide);
-      $("#button-side-" + mySide).html(newButtons);
-      $("#button-side-" + oppSide).text("Waiting for move");
-      updateFirebase(mySide);
-    }, 1500);
-  }
-
-
-  $(document).on("click", ".get-up", function() {
-    var area = $(this).attr("value")
-    database.ref(area).set({
-      sitting: false,
-      name: "xxxxxxxxxxxxxxx",
-      wins: 0,
-      losses: 0,
-      avatar: "",
-      action: ""
-    });
-    var newButton = $("<button>");
-    newButton.addClass("sit-down btn btn-default");
-    newButton.attr("value", area);
-    newButton.text("Sit Here");
-    $("#avatar-side-" + area).html("");
-    $("#button-side-" + area).html("");
-    $("#" + area + "-name").text("");
-    $("#button-place-" + area).html(newButton);
-    mySide = "none";
-    myWins = 0;
-    myLosses = 0;
-  });
-
   function placeAvatar(avatarNumber, area) {
     var avatarSide = $("<div>")
     var buttonSide = $("<div>")
@@ -251,6 +169,86 @@ $(document).ready(function() {
       action: clickAction
     });
   }
+
+  function checkWin() {
+    if (clickAction!="" && oppAction) {
+      var newImg = $("<img>");
+      newImg.attr("src", "assets/images/" + oppAction + ".jpg");
+      newImg.addClass("action-image");
+      var newDiv = $("<div>");
+      newDiv.addClass("result-text");
+      $("#button-side-" + oppSide).html(newImg);
+      if (clickAction === oppAction) {
+        newDiv.text("That is a tie");
+      } else if (clickAction === "rock") {
+        if (oppAction === "scissors") {
+          newDiv.text("You win! " + clickAction + " beats " + oppAction);
+          myWins++;
+        } else {
+          newDiv.text("You lose! " + oppAction + " beats " + clickAction);
+          myLosses++;
+        }
+      } else if (clickAction === "paper") {
+        if (oppAction === "rock") {
+          newDiv.text("You win! " + clickAction + " beats " + oppAction);
+          myWins++;
+        } else {
+          newDiv.text("You lose! " + oppAction + " beats " + clickAction);
+          myLosses++;
+        }       
+      } else {
+        if (oppAction === "paper") {
+          newDiv.text("You win! " + clickAction + " beats " + oppAction);
+          myWins++;
+        } else {
+          myLosses++;
+          newDiv.text("You lose! " + oppAction + " beats " + clickAction);
+        }
+      }
+      $("#chat-area").append(newDiv)
+      $("#chat-area").scrollTop($("#chat-area")[0].scrollHeight);
+      $("#scoreboard-" + mySide).text("Wins: " + myWins + " || Losses: " + myLosses)
+      updateFirebase(mySide);
+      resetGame();
+    }
+  }
+
+  function resetGame() {
+    clickAction = "";
+    setTimeout(function() {
+      oppAction = false;
+      var newButtons = $("<div>")
+      formatButton(newButtons, "rock", mySide);
+      formatButton(newButtons, "paper", mySide);
+      formatButton(newButtons, "scissors", mySide);
+      $("#button-side-" + mySide).html(newButtons);
+      $("#button-side-" + oppSide).text("");
+      updateFirebase(mySide);
+    }, 1500);
+  }
+
+  $(document).on("click", ".get-up", function() {
+    var area = $(this).attr("value")
+    database.ref(area).set({
+      sitting: false,
+      name: "xxxxxxxxxxxxxxx",
+      wins: 0,
+      losses: 0,
+      avatar: "",
+      action: ""
+    });
+    var newButton = $("<button>");
+    newButton.addClass("sit-down btn btn-default");
+    newButton.attr("value", area);
+    newButton.text("Sit Here");
+    $("#avatar-side-" + area).html("");
+    $("#button-side-" + area).html("");
+    $("#" + area + "-name").text("");
+    $("#button-place-" + area).html(newButton);
+    mySide = "none";
+    myWins = 0;
+    myLosses = 0;
+  });
 
 /**
    _____  _             _      _____        _    _    _                    

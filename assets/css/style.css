@@ -5,6 +5,7 @@
 body {
   background-color:#e8dfff;
   overflow: hidden;
+  padding:2vh 2%;
 }
 
 #start-screen {
@@ -32,6 +33,13 @@ body {
 .avatar {
   width:100%;
   cursor: pointer;
+  border:2px solid black;
+}
+
+.avatar:hover {
+  -webkit-box-shadow: 0px 0px 20px black;
+  -moz-box-shadow: 0px 0px 20px black;
+  box-shadow: 0px 0px 20px black;
 }
 
 .get-up, .sit-down {
@@ -47,7 +55,7 @@ body {
 }
 
 .row {
-  border:1px solid black;
+  border:1px solid darkblue;
   background-color: #e8dfff;
 }
 
@@ -91,10 +99,10 @@ body {
 }
 
 #bottom-chat {
-  width:100%;
+  width:96%;
   position: fixed;
-  bottom: 0;
-  left:0;
+  bottom: 2vh;
+  left:2%;
   margin:0;
   z-index: 20;
 }
